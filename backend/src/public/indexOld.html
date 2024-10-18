@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store</title>
+</head>
+
+<body>
+  <input id="user_email" type="text" placeholder="test_user_404905777@testuser.com"
+    value="test_user_404905777@testuser.com">
+  <br>
+  <input type="number" placeholder="subscripcion_months" name="subscripcion_months" id="subscripcion_months">
+  <br>
+  <input type="number" placeholder="transaction_amount" name="transaction_amount" id="transaction_amount">
+  <br>
+  <button id="checkout">Donation subscribe</button>
+
+  <script>
+    const checkoutButton = document.getElementById("checkout");
+
+    checkoutButton.addEventListener("click", async () => {
+      const payer_email = document.getElementById("user_email").value;
+      const transaction_amount = parseInt(document.getElementById("transaction_amount").value);
+      const subscripcion_months = parseInt(document.getElementById("subscripcion_months").value);
+
+      if (transaction_amount < 5) {
+        alert("Cannot pay an amount lower than $ 5.00")
+        return
+      }
+
+      const requestBody = {
+        payer_email,
+        transaction_amount,
+        subscripcion_months,
+      };
+
+      const res = await fetch("/create-subscripcion", {
+        method: "POST",
+        headers: {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RfdXNlcl80MDQ5MDU3NzdAdGVzdHVzZXIuY29tIiwiaWF0IjoxNjk4MjYwMTQ0LCJleHAiOjE2OTgzNDY1NDR9.QjXSmUHN-DguuZFWuQrLS1TF9TtnLKCmgEMEI0SMzFw",
+          "Content-Type": "application/json" // Establece el encabezado Content-Type
+        },
+        body: JSON.stringify(requestBody) // Convierte el objeto a JSON
+      });
+
+      const data = await res.json();
+      console.log(data);
+      if (data) window.location.href = data.init_point;
+    });
+  </script>
+</body>
+
+</html>
